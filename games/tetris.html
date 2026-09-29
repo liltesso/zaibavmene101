@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Тетрис — LEGIT</title>
+<style>
+:root{
+  --g: inset 0 0 0 1px rgba(255,255,255,.03),
+       inset 1.8px 3px 0 -2px rgba(255,255,255,.27),
+       inset -2px -2px 0 -2px rgba(255,255,255,.24),
+       0 6px 16px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
+  font-family:-apple-system,'SF Pro Display',Inter,sans-serif;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;
+  touch-action:none;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);}
+
+/* ── background ── */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;}
+.bg::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;
+  background:conic-gradient(from 0deg at 30% 40%,
+    rgba(29,78,216,0) 0deg,rgba(37,99,235,.3) 60deg,
+    rgba(29,78,216,0) 120deg,rgba(79,70,229,.22) 180deg,
+    rgba(37,99,235,0) 240deg,rgba(29,78,216,.18) 300deg,
+    rgba(29,78,216,0) 360deg);
+  animation:spin 16s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);}
+.b1{width:60vw;height:60vw;background:rgba(37,99,235,.4);top:-15%;left:-15%;animation:b1m 18s ease-in-out infinite alternate;}
+.b2{width:50vw;height:50vw;background:rgba(99,102,241,.35);bottom:-10%;right:-10%;animation:b2m 22s ease-in-out infinite alternate;}
+@keyframes b1m{to{transform:translate(12vw,18vh) scale(1.2);}}
+@keyframes b2m{to{transform:translate(-10vw,-12vh) scale(.85);}}
+
+/* ── layout ── */
+.shell{position:relative;z-index:1;width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;}
+
+.topbar{width:100%;display:flex;align-items:center;padding:10px 16px;gap:12px;}
+.back{font-size:14px;font-weight:700;color:rgba(96,165,250,.9);text-decoration:none;flex-shrink:0;}
+.scores{display:flex;gap:10px;flex:1;justify-content:center;}
+.chip{background:rgba(255,255,255,.06);border:.5px solid rgba(59,130,246,.25);
+  border-radius:12px;padding:6px 14px;text-align:center;box-shadow:var(--g);}
+.chip label{display:block;font-size:8px;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:1px;}
+.chip span{font-size:18px;font-weight:900;color:#60a5fa;}
+
+.game-area{display:flex;align-items:flex-start;gap:10px;padding:0 12px;}
+#cv{border-radius:14px;border:.5px solid rgba(59,130,246,.3);
+  box-shadow:0 0 28px rgba(37,99,235,.25),var(--g);display:block;}
+
+/* ── controls ── */
+.ctrl{display:grid;
+  grid-template-areas:". u ." "l . r" ". d .";
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;padding:10px 12px;width:100%;}
+.c{height:58px;border-radius:16px;font-size:22px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(59,130,246,.1);border:.5px solid rgba(59,130,246,.25);
+  color:#fff;box-shadow:var(--g);transition:transform .1s,background .1s;
+  user-select:none;}
+.c:active{transform:scale(.86);background:rgba(59,130,246,.3);}
+.cu{grid-area:u;} .cl{grid-area:l;} .cr{grid-area:r;} .cd{grid-area:d;}
+.rot-row{padding:0 12px 8px;width:100%;}
+.rot-btn{width:100%;height:50px;border-radius:14px;font-size:14px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:rgba(59,130,246,.12);border:.5px solid rgba(59,130,246,.3);
+  color:#60a5fa;box-shadow:var(--g);user-select:none;}
+.rot-btn:active{background:rgba(59,130,246,.28);}
+
+/* ── overlays ── */
+.ov{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;
+  background:rgba(0,0,15,.85);backdrop-filter:blur(12px);}
+.ov.hide{display:none;}
+.ov h2{font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;}
+.ov p{font-size:14px;color:rgba(255,255,255,.5);}
+.btn-group { display: flex; gap: 12px; margin-top: 10px; }
+.btn-start{padding:14px 32px;border-radius:16px;font-size:16px;font-weight:800;
+  color:#fff;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#1d4ed8,#3b82f6);
+  box-shadow:0 0 24px rgba(59,130,246,.5),var(--g);}
+.btn-start:active{transform:scale(.93);}
+.btn-exit{padding:14px 32px;border-radius:16px;font-size:16px;font-weight:800;
+  color:#fff;border:none;cursor:pointer; text-decoration: none; display: flex; align-items: center; justify-content: center;
+  background:rgba(255,255,255,0.1);
+  box-shadow:var(--g);}
+.btn-exit:active{transform:scale(.93);}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script></head>
+<body>
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<div class="shell">
+  <div class="topbar">
+    <a href="../index.html" class="back">← На главную</a>
+    <div class="scores">
+      <div class="chip"><label>Счет</label><span id="sc">0</span></div>
+      <div class="chip"><label>Линии</label><span id="ln">0</span></div>
+      <div class="chip"><label>Уровень</label><span id="lv">1</span></div>
+    </div>
+  </div>
+
+  <div class="game-area">
+    <canvas id="cv"></canvas>
+  </div>
+
+  <div class="ctrl">
+    <div class="c cu" id="bU">↑</div>
+    <div class="c cl" id="bL">←</div>
+    <div class="c cr" id="bR">→</div>
+    <div class="c cd" id="bD">↓</div>
+  </div>
+  <div class="rot-row">
+    <div class="rot-btn" id="bRot">↻ &nbsp;Поворот</div>
+  </div>
+</div>
+
+<!-- overlays -->
+<div class="ov" id="ovStart">
+  <h2>🧩 Тетрис</h2>
+  <p>Собирай линии и набирай очки</p>
+  <button class="btn-start" id="btnS">Начать игру</button>
+</div>
+<div class="ov hide" id="ovOver">
+  <h2>Игра окончена!</h2>
+  <p id="ovTxt">Счет: 0</p>
+  <div class="btn-group">
+    <a href="../index.html" class="btn-exit">Выйти</a>
+    <button class="btn-start" id="btnR">Еще раз</button>
+  </div>
+</div>
+
+<script>
+// ── Canvas setup ───────────────────────────────────────────
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const COLS = 9, ROWS = 18, BS = Math.min(Math.floor((window.innerHeight * 0.52) / ROWS), 30);
+cv.width  = COLS * BS;
+cv.height = ROWS * BS;
+
+// ── Colours ───────────────────────────────────────────────
+const COLS_PAL = ['#1e40af','#1d4ed8','#2563eb','#3b82f6','#60a5fa','#93c5fd','#1e3a8a'];
+
+// ── Pieces ────────────────────────────────────────────────
+const SHAPES = [
+  [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], // I
+  [[1,1],[1,1]],                              // O
+  [[0,1,0],[1,1,1]],                          // T
+  [[1,0,0],[1,1,1]],                          // L
+  [[0,0,1],[1,1,1]],                          // J
+  [[0,1,1],[1,1,0]],                          // S
+  [[1,1,0],[0,1,1]]                           // Z
+];
+
+// ── State ─────────────────────────────────────────────────
+let board, piece, score, lines, level, speed, lastDrop, running, raf;
+
+function newBoard(){ board = Array.from({length:ROWS}, ()=>Array(COLS).fill(0)); }
+
+function newPiece(){
+  const i = Math.floor(Math.random() * SHAPES.length);
+  const s = SHAPES[i].map(r=>[...r]);
+  piece = { s, x: Math.floor(COLS/2) - Math.floor(s[0].length/2), y: -1, c: i };
+  if(hit(0,1)) endGame();
+}
+
+function hit(dx, dy, sh){
+  sh = sh || piece.s;
+  for(let r=0;r<sh.length;r++) for(let c=0;c<sh[r].length;c++){
+    if(!sh[r][c]) continue;
+    const nx = piece.x+c+dx, ny = piece.y+r+dy;
+    if(nx<0||nx>=COLS||ny>=ROWS) return true;
+    if(ny>=0 && board[ny][nx]) return true;
+  }
+  return false;
+}
+
+function lock(){
+  piece.s.forEach((row,r)=>row.forEach((v,c)=>{
+    if(v && piece.y+r>=0) board[piece.y+r][piece.x+c] = piece.c+1;
+  }));
+  let cleared=0;
+  for(let r=ROWS-1;r>=0;r--){
+    if(board[r].every(v=>v)){board.splice(r,1);board.unshift(Array(COLS).fill(0));cleared++;r++;}
+  }
+  lines+=cleared; score+=cleared?[0,100,300,500,800][cleared]*level:0;
+  level=Math.floor(lines/10)+1; speed=Math.max(80,500-level*40);
+  document.getElementById('sc').textContent=score;
+  document.getElementById('ln').textContent=lines;
+  document.getElementById('lv').textContent=level;
+  newPiece();
+}
+
+function rotate(cw=true){
+  const s=piece.s, rows=s.length, cols=s[0].length;
+  let ns=[];
+  if(cw){ for(let c=0;c<cols;c++){const row=[];for(let r=rows-1;r>=0;r--)row.push(s[r][c]);ns.push(row);} }
+  else  { for(let c=cols-1;c>=0;c--){const row=[];for(let r=0;r<rows;r++)row.push(s[r][c]);ns.push(row);} }
+  const old=piece.s; piece.s=ns;
+  for(const kick of [0,-1,1,-2,2]){
+    if(!hit(kick,0)){piece.x+=kick;return;}
+  }
+  piece.s=old;
+}
+
+// ── Draw ──────────────────────────────────────────────────
+function drawBlock(x,y,ci,ghost){
+  if(y<0)return;
+  const px=x*BS, py=y*BS;
+  if(ci===-1){
+    ctx.fillStyle='rgba(0,8,24,.92)';ctx.fillRect(px,py,BS,BS);
+    ctx.strokeStyle='rgba(59,130,246,.07)';ctx.lineWidth=.5;ctx.strokeRect(px+.5,py+.5,BS-1,BS-1);
+    return;
+  }
+  if(ghost){
+    ctx.fillStyle='rgba(96,165,250,.13)';ctx.fillRect(px+1,py+1,BS-2,BS-2);
+    ctx.strokeStyle='rgba(96,165,250,.3)';ctx.lineWidth=1;ctx.strokeRect(px+1.5,py+1.5,BS-3,BS-3);
+    return;
+  }
+  const g=ctx.createLinearGradient(px,py,px+BS,py+BS);
+  g.addColorStop(0,COLS_PAL[ci]);
+  g.addColorStop(1,lighten(COLS_PAL[ci],40));
+  ctx.fillStyle=g; ctx.fillRect(px+1,py+1,BS-2,BS-2);
+  ctx.strokeStyle='rgba(255,255,255,.18)'; ctx.lineWidth=1; ctx.strokeRect(px+1.5,py+1.5,BS-3,BS-3);
+  ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(px+3,py+3,BS/3,3);
+}
+
+function lighten(h,a){
+  let r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
+  return `rgb(${Math.min(r+a,255)},${Math.min(g+a,255)},${Math.min(b+a+10,255)})`;
+}
+
+function ghostY(){
+  let gy=piece.y;
+  while(!hit(0,gy-piece.y+1)) gy++;
+  return gy;
+}
+
+function render(){
+  // board
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) drawBlock(c,r,board[r][c]-1,false);
+  // ghost
+  const gy=ghostY();
+  if(gy!==piece.y) piece.s.forEach((row,r)=>row.forEach((v,c)=>{if(v)drawBlock(piece.x+c,gy+r,-2,true);}));
+  // piece
+  piece.s.forEach((row,r)=>row.forEach((v,c)=>{if(v)drawBlock(piece.x+c,piece.y+r,piece.c);}));
+}
+
+// ── Game Loop ─────────────────────
+function loop(ts){
+  if(!running) return;
+  raf = requestAnimationFrame(loop);
+  if(ts - lastDrop > speed){ lastDrop=ts; if(!hit(0,1)) piece.y++; else lock(); }
+  render();
+}
+
+function startGame(){
+  newBoard(); score=0; lines=0; level=1; speed=500; running=true;
+  document.getElementById('sc').textContent=0;
+  document.getElementById('ln').textContent=0;
+  document.getElementById('lv').textContent=1;
+  document.getElementById('ovStart').classList.add('hide');
+  document.getElementById('ovOver').classList.add('hide');
+  newPiece();
+  cancelAnimationFrame(raf);
+  lastDrop=performance.now();
+  raf=requestAnimationFrame(loop);
+}
+
+function endGame(){
+  running=false; cancelAnimationFrame(raf);
+  document.getElementById('ovTxt').textContent='Итоговый счет: '+score;
+  document.getElementById('ovOver').classList.remove('hide');
+}
+
+// ── Input ─────────────────────────────────────────────────
+function moveL(){ if(running&&!hit(-1,0)) piece.x--; }
+function moveR(){ if(running&&!hit(1,0))  piece.x++; }
+function moveD(){ if(running&&!hit(0,1))  piece.y++; else if(running){ lock(); } }
+function rot()  { if(running) rotate(); }
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(!running)return;
+  if(e.key==='ArrowLeft')  moveL();
+  if(e.key==='ArrowRight') moveR();
+  if(e.key==='ArrowDown')  moveD();
+  if(e.key==='ArrowUp'||e.key===' '){ e.preventDefault(); rot(); }
+});
+
+// Buttons
+function addBtn(id,fn){
+  const el=document.getElementById(id);
+  el.addEventListener('touchstart',e=>{e.preventDefault();fn();},{passive:false});
+  el.addEventListener('mousedown',fn);
+}
+addBtn('bL',moveL); addBtn('bR',moveR); addBtn('bD',moveD);
+addBtn('bU',rot); addBtn('bRot',rot);
+
+// Swipe on canvas
+let tx,ty;
+cv.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+cv.addEventListener('touchend',e=>{
+  if(!running)return;
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>Math.abs(dy)){
+    if(dx<-20) moveL(); else if(dx>20) moveR();
+  } else {
+    if(dy>20) moveD(); else if(dy<-20) rot();
+  }
+},{passive:true});
+
+document.getElementById('btnS').addEventListener('click',startGame);
+document.getElementById('btnR').addEventListener('click',startGame);
+</script>
+</body>
+</html>
