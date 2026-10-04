@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Флаппи — LEGIT</title>
+<style>
+:root{
+  --g: inset 0 0 0 1px rgba(255,255,255,.03),
+       inset 1.8px 3px 0 -2px rgba(255,255,255,.27),
+       inset -2px -2px 0 -2px rgba(255,255,255,.24),
+       0 6px 16px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
+  font-family:-apple-system,'SF Pro Display',Inter,sans-serif;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
+
+/* bg */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;}
+.bg::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;
+  background:conic-gradient(from 0deg at 30% 40%,
+    rgba(29,78,216,0) 0deg,rgba(37,99,235,.3) 60deg,
+    rgba(29,78,216,0) 120deg,rgba(79,70,229,.22) 180deg,
+    rgba(37,99,235,0) 240deg,rgba(29,78,216,.18) 300deg,
+    rgba(29,78,216,0) 360deg);
+  animation:spin 16s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);}
+.b1{width:60vw;height:60vw;background:rgba(37,99,235,.4);top:-10%;left:-10%;animation:bm1 20s ease-in-out infinite alternate;}
+.b2{width:50vw;height:50vw;background:rgba(245,158,11,.25);bottom:-10%;right:-10%;animation:bm2 24s ease-in-out infinite alternate;}
+@keyframes bm1{to{transform:translate(10vw,15vh) scale(1.2);}}
+@keyframes bm2{to{transform:translate(-8vw,-10vh) scale(.85);}}
+
+/* shell */
+.shell{position:relative;z-index:1;width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;}
+
+.topbar{width:100%;display:flex;align-items:center;padding:10px 16px;gap:12px;}
+.back{font-size:14px;font-weight:700;color:rgba(96,165,250,.9);text-decoration:none;}
+.scores{display:flex;gap:10px;flex:1;justify-content:center;}
+.chip{background:rgba(255,255,255,.06);border:.5px solid rgba(59,130,246,.25);
+  border-radius:12px;padding:6px 16px;text-align:center;box-shadow:var(--g);}
+.chip label{display:block;font-size:8px;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:1px;}
+.chip span{font-size:18px;font-weight:900;color:#60a5fa;}
+
+/* canvas */
+#cv{border-radius:14px;border:.5px solid rgba(59,130,246,.3);
+  box-shadow:0 0 28px rgba(37,99,235,.25),var(--g);display:block;margin-top:10px;}
+
+/* jump button */
+.jump-wrap{padding:16px;width:100%;max-width:360px;flex:1;display:flex;align-items:flex-end;margin-bottom:10px;}
+.jump-btn{width:100%;height:80px;border-radius:20px;font-size:32px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(59,130,246,.12);border:.5px solid rgba(59,130,246,.3);
+  color:#fff;box-shadow:var(--g);transition:transform .1s,background .1s;user-select:none;}
+.jump-btn:active,.jump-btn.press{transform:scale(.94);background:rgba(59,130,246,.32);}
+
+/* overlay */
+.ov{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;
+  background:rgba(0,0,15,.85);backdrop-filter:blur(12px);}
+.ov.hide{display:none;}
+.ov h2{font-size:32px;font-weight:900;color:#fff;}
+.ov p{font-size:14px;color:rgba(255,255,255,.5);}
+.btn-group { display: flex; gap: 12px; margin-top: 10px; }
+.btn{padding:14px 32px;border-radius:16px;font-size:16px;font-weight:800;
+  color:#fff;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#1d4ed8,#3b82f6);
+  box-shadow:0 0 24px rgba(59,130,246,.5);}
+.btn:active{transform:scale(.93);}
+.btn-exit{padding:14px 32px;border-radius:16px;font-size:16px;font-weight:800;
+  color:#fff;border:none;cursor:pointer; text-decoration: none; display: flex; align-items: center; justify-content: center;
+  background:rgba(255,255,255,0.1);
+  box-shadow:var(--g);}
+.btn-exit:active{transform:scale(.93);}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script><style>html,body{background:#0c0d11}.back{color:#9bc8ff}.btn,.btn-start{background:linear-gradient(135deg,#388cf6,#2462ca)!important;color:#fff!important}.ov{background:rgba(12,13,17,.94)!important}.ov h2{color:#edf5ff}.btn-exit,.back{min-height:44px;display:inline-flex;align-items:center;justify-content:center}a:focus-visible,button:focus-visible{outline:3px solid #89baff;outline-offset:3px}@media(prefers-reduced-motion:reduce){.blob{animation:none!important}}</style></head>
+<body>
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<div class="shell">
+  <div class="topbar">
+    <a href="../index.html#games" class="back">← На главную</a>
+    <div class="scores">
+      <div class="chip"><label>Счет</label><span id="sc">0</span></div>
+      <div class="chip"><label>Рекорд</label><span id="bs">0</span></div>
+    </div>
+  </div>
+
+  <canvas id="cv"></canvas>
+
+  <div class="jump-wrap">
+    <div class="jump-btn" id="btnJ">ПРЫЖОК!</div>
+  </div>
+</div>
+
+<div class="ov" id="ovS">
+  <h2>🐦 Флаппи</h2>
+  <p>Тапай чтобы лететь</p>
+  <button class="btn" id="btnS">Начать</button>
+</div>
+<div class="ov hide" id="ovO">
+  <h2>Конец игры!</h2>
+  <p id="ot">Счет: 0</p>
+  <div class="btn-group">
+    <a href="../index.html#games" class="btn-exit">Выйти</a>
+    <button class="btn" id="btnR">Еще раз</button>
+  </div>
+</div>
+
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+const W = Math.min(window.innerWidth - 32, 400);
+const H = Math.min(window.innerHeight * 0.55, 600);
+cv.width = W; cv.height = H;
+
+let bird, pipes, particles, score, best=0, running=false, raf, frameC=0;
+const GRAVITY = 0.55, JUMP = -8.5, SPEED = 3.5, PIPE_W = 60, GAP = 170;
+
+function init(){
+  bird = { x:W*0.25, y:H/2, vy:0, rot:0 };
+  pipes = []; particles = []; score = 0; frameC = 0;
+  document.getElementById('sc').textContent=0;
+  spawnPipe(W); spawnPipe(W + (W/2) + (PIPE_W/2));
+}
+
+function spawnPipe(x){
+  const top = 60 + Math.random()*(H - GAP - 120);
+  pipes.push({ x, top, passed:false });
+}
+
+function jump(){
+  if(!running) return;
+  bird.vy = JUMP;
+  for(let i=0;i<5;i++){
+    particles.push({
+      x:bird.x-10, y:bird.y,
+      vx:(Math.random()-.5)*4-2, vy:(Math.random()-.5)*4,
+      l:20+Math.random()*15
+    });
+  }
+}
+
+function update(){
+  frameC++;
+  bird.vy += GRAVITY; bird.y += bird.vy;
+  bird.rot = Math.min(Math.max(bird.vy * 0.08, -0.5), 0.5);
+
+  if(bird.y + 12 > H || bird.y - 12 < 0) { endGame(); return; }
+
+  for(let i=0; i<pipes.length; i++){
+    const p = pipes[i];
+    p.x -= SPEED;
+    if(bird.x + 12 > p.x && bird.x - 12 < p.x + PIPE_W){
+      if(bird.y - 12 < p.top || bird.y + 12 > p.top + GAP){ endGame(); return; }
+    }
+    if(!p.passed && p.x + PIPE_W < bird.x){
+      p.passed = true; score++; best = Math.max(score, best);
+      document.getElementById('sc').textContent=score;
+      document.getElementById('bs').textContent=best;
+    }
+  }
+
+  if(pipes[0] && pipes[0].x + PIPE_W < 0){
+    pipes.shift();
+    spawnPipe(pipes[pipes.length-1].x + (W/2) + (PIPE_W/2));
+  }
+
+  for(let i=particles.length-1; i>=0; i--){
+    particles[i].x += particles[i].vx;
+    particles[i].y += particles[i].vy;
+    particles[i].l--;
+    if(particles[i].l <= 0) particles.splice(i,1);
+  }
+}
+
+function draw(){
+  const sky=ctx.createLinearGradient(0,0,0,H);
+  sky.addColorStop(0,'rgba(0,10,25,0.95)'); sky.addColorStop(1,'rgba(0,15,45,0.95)');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle='rgba(59,130,246,0.05)';
+  for(let i=0; i<3; i++){
+    const cx = ((frameC*0.5 + i*200) % (W+200)) - 100;
+    const cy = 100 + i*80;
+    ctx.beginPath(); ctx.arc(cx,cy,40,0,Math.PI*2); ctx.arc(cx+30,cy-10,50,0,Math.PI*2); ctx.arc(cx+70,cy,35,0,Math.PI*2); ctx.fill();
+  }
+
+  particles.forEach(p=>{
+    ctx.fillStyle=`rgba(96,165,250,${p.l/35})`;
+    ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
+  });
+
+  pipes.forEach(p=>{
+    const g=ctx.createLinearGradient(p.x,0,p.x+PIPE_W,0);
+    g.addColorStop(0,'#1e3a8a'); g.addColorStop(0.5,'#3b82f6'); g.addColorStop(1,'#1e3a8a');
+    ctx.fillStyle=g; ctx.fillRect(p.x,0,PIPE_W,p.top-20);
+    ctx.fillStyle='#2563eb'; ctx.fillRect(p.x-4,p.top-20,PIPE_W+8,20);
+    ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.strokeRect(p.x-4,p.top-20,PIPE_W+8,20);
+    ctx.fillStyle='#2563eb'; ctx.fillRect(p.x-4,p.top+GAP,PIPE_W+8,20);
+    ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.strokeRect(p.x-4,p.top+GAP,PIPE_W+8,20);
+    ctx.fillStyle=g; ctx.fillRect(p.x,p.top+GAP+20,PIPE_W,H-(p.top+GAP+20));
+  });
+
+  ctx.save();
+  ctx.translate(bird.x, bird.y); ctx.rotate(bird.rot);
+  ctx.shadowColor='#60a5fa'; ctx.shadowBlur=12;
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,13,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(0,0,0,0.2)'; ctx.beginPath(); ctx.arc(0,2,11,0,Math.PI*2); ctx.fill();
+  const wingY = (bird.vy < 0) ? 6 : -4;
+  ctx.fillStyle='#60a5fa'; ctx.beginPath(); ctx.ellipse(-6,wingY,10,5,0.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(6,-5,4,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(7,-6,1.5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#f59e0b'; ctx.beginPath(); ctx.moveTo(11,-1); ctx.lineTo(19,2); ctx.lineTo(11,5); ctx.fill();
+  ctx.restore();
+}
+
+function loop(){
+  if(!running) return;
+  raf=requestAnimationFrame(loop); update(); draw();
+}
+
+function startGame(){
+  running=false; cancelAnimationFrame(raf);
+  init(); running=true;
+  document.getElementById('ovS').classList.add('hide');
+  document.getElementById('ovO').classList.add('hide');
+  raf=requestAnimationFrame(loop);
+}
+
+function endGame(){
+  running=false; cancelAnimationFrame(raf);
+  document.getElementById('ot').textContent='Итоговый счет: '+score;
+  document.getElementById('ovO').classList.remove('hide');
+}
+
+function onJump(e){
+  e.preventDefault();
+  if(!running){
+    if(document.getElementById('ovS').classList.contains('hide') && !document.getElementById('ovO').classList.contains('hide')){
+      // Wait for button
+    } else { startGame(); }
+  } else { jump(); }
+}
+document.getElementById('btnJ').addEventListener('touchstart', onJump, {passive:false});
+document.getElementById('btnJ').addEventListener('mousedown', onJump);
+cv.addEventListener('touchstart', onJump, {passive:false});
+cv.addEventListener('mousedown', onJump);
+document.addEventListener('keydown', e => { if(e.code==='Space') onJump(e); });
+
+document.getElementById('btnS').addEventListener('click', startGame);
+document.getElementById('btnR').addEventListener('click', startGame);
+
+init(); draw();
+</script>
+<script>(function(){var app=window.Telegram&&window.Telegram.WebApp;if(!app||!app.initData)return;app.ready();app.expand();if(app.isVersionAtLeast('6.1')){app.setHeaderColor('#0c0d11');app.setBackgroundColor('#0c0d11');app.BackButton.show();app.BackButton.onClick(function(){location.href='../index.html#games';});}})();</script></body>
+</html>

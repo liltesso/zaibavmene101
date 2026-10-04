@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#0d0e12">
+    <meta name="description" content="LegitAssets — магазины Telegram и Steam, цифровые сервисы и мини-игры в одном месте.">
+    <title>LegitAssets — магазины и мини-игры</title>
+    <style>
+/* LegitAssets — интерфейс, сетки, компоненты и адаптивные состояния. */
+:root {
+  color-scheme:dark;
+  --bg:#0d0e12;
+  --surface:#191b22;
+  --line:#2d303a;
+  --text:#f4f5f8;
+  --muted:#9ca1af;
+  --blue:#73aaff;
+  --safe-top:0px;
+  --safe-bottom:0px;
+  --safe-left:0px;
+  --safe-right:0px;
+  --content-top:0px;
+  --content-bottom:0px;
+  --content-left:0px;
+  --content-right:0px;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+html {
+  scroll-behavior:smooth;
+  scroll-padding-top:95px;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:14px;
+  line-height:1.5;
+  padding:calc(var(--safe-top) + var(--content-top)) calc(var(--safe-right) + var(--content-right)) 0 calc(var(--safe-left) + var(--content-left));
+  -webkit-tap-highlight-color:transparent;
+}
+
+a {
+  color:inherit;
+  text-decoration:none;
+}
+
+button {
+  font:inherit;
+  color:inherit;
+}
+
+a,button {
+  touch-action:manipulation;
+}
+
+button {
+  cursor:pointer;
+}
+
+.icon {
+  width:24px;
+  height:24px;
+  flex-shrink:0;
+}
+
+a:focus-visible,button:focus-visible {
+  outline:3px solid #8bbdff;
+  outline-offset:4px;
+}
+
+::selection {
+  background:#397de7;
+  color:white;
+}
+
+h1,h2,h3,p {
+  margin:0;
+}
+
+button:disabled {
+  cursor:default;
+}
+
+.container {
+  width:min(100%,1120px);
+  padding-inline:32px;
+  margin-inline:auto;
+}
+
+.skip {
+  position:fixed;
+  left:16px;
+  top:-80px;
+  z-index:100;
+  padding:12px;
+  background:#d7e8ff;
+  color:#142036;
+}
+
+.skip:focus {
+  top:16px;
+}
+
+.header {
+  position:sticky;
+  top:0;
+  z-index:20;
+  border-bottom:1px solid #ffffff08;
+  background:#0d0e12ed;
+  backdrop-filter:blur(16px);
+}
+
+.header-inner {
+  height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-height:44px;
+}
+
+.brand-name {
+  font-size:20px;
+  font-weight:750;
+  letter-spacing:-.6px;
+}
+
+.brand-caption {
+  display:block;
+  color:#7f8799;
+  font-size:8px;
+  letter-spacing:1.8px;
+  margin-top:1px;
+}
+
+.desktop-nav {
+  display:flex;
+  align-items:center;
+  gap:28px;
+  color:#aeb5c4;
+  font-size:12px;
+}
+
+.desktop-nav a {
+  padding:12px 0;
+}
+
+.desktop-nav a:hover {
+  color:#a6c9ff;
+}
+
+.header-help {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-width:44px;
+  min-height:44px;
+  border:1px solid #303540;
+  background:#191c24;
+  border-radius:14px;
+  padding:10px 15px;
+  font-size:12px;
+}
+
+.header-help .icon {
+  width:19px;
+  height:19px;
+}
+
+.header-help:hover {
+  background:#242b37;
+  border-color:#587298;
+}
+
+.hero {
+  display:grid;
+  grid-template-columns:1fr .82fr;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:375px;
+  border:1px solid #30384a;
+  border-radius:28px;
+  margin-top:28px;
+  background:radial-gradient(ellipse at 80% 20%,#2b478035,transparent 55%),linear-gradient(120deg,#1b2130,#12151d 80%);
+  box-shadow:inset 0 1px #ffffff0a,0 14px 50px #00000014;
+}
+
+.hero:before {
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:linear-gradient(#ffffff03 1px,transparent 1px),linear-gradient(90deg,#ffffff03 1px,transparent 1px);
+  background-size:35px 35px;
+  mask-image:linear-gradient(90deg,transparent,#000);
+}
+
+.hero-copy {
+  padding:43px 0 40px 42px;
+  position:relative;
+  z-index:2;
+}
+
+.eyebrow {
+  font-size:9px;
+  letter-spacing:1.9px;
+  font-weight:700;
+  color:#a0b9df;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.eyebrow:before {
+  content:'';
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#72aaff;
+  box-shadow:0 0 12px #72aaff66;
+}
+
+h1 {
+  font-size:53px;
+  line-height:1.09;
+  letter-spacing:-2.4px;
+  margin:18px 0 17px;
+  font-weight:760;
+}
+
+h1 em {
+  font-style:normal;
+  color:#9dc3ff;
+}
+
+.hero-copy>p {
+  font-size:14px;
+  line-height:1.75;
+  color:#a6b0c3;
+}
+
+.hero-actions {
+  margin-top:26px;
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+.primary {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  min-height:48px;
+  padding:12px 19px;
+  border-radius:12px;
+  background:linear-gradient(145deg,#4d92fb,#2f6ddb);
+  box-shadow:inset 0 1px #ffffff35,0 7px 24px #2868d52e;
+  color:#fff;
+  font-size:12px;
+  font-weight:650;
+  position:relative;
+  overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
+}
+
+.primary .icon {
+  width:17px;
+}
+
+.primary:after {
+  content:'';
+  position:absolute;
+  inset:-100%;
+  background:linear-gradient(110deg,transparent 44%,#ffffff30 50%,transparent 56%);
+  transform:translateX(-65%);
+  animation:sheen 9s ease-in-out infinite;
+}
+
+.primary:hover {
+  box-shadow:inset 0 1px #ffffff35,0 9px 28px #3477ee55;
+  transform:translateY(-2px);
+}
+
+.quiet-link {
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#b2bfd2;
+  font-size:12px;
+}
+
+.quiet-link .icon {
+  width:16px;
+  height:16px;
+}
+
+.hero-art {
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-width:0;
+  pointer-events:none;
+}
+
+.halo {
+  position:absolute;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  border:1px solid #6582b31a;
+  box-shadow:0 0 0 35px #6c92c905,0 0 0 70px #6c92c903;
+}
+
+.halo:after {
+  content:'';
+  position:absolute;
+  inset:25px;
+  border:1px dashed #819dca16;
+  border-radius:50%;
+  animation:orbit 60s linear infinite;
+}
+
+.emblem {
+  width:147px;
+  height:147px;
+  border-radius:37px;
+  transform:rotate(-13deg);
+  background:linear-gradient(145deg,#376dcc,#16376f);
+  border:1px solid #83b6ff60;
+  box-shadow:inset 0 2px #ffffff33,0 22px 55px #0005,0 0 60px #4584ef15;
+  display:grid;
+  place-items:center;
+  color:#d6e8ff;
+  animation:levitate 7s ease-in-out infinite;
+}
+
+.emblem .icon {
+  width:83px;
+  height:83px;
+  transform:rotate(13deg);
+  stroke-width:1.05;
+}
+
+.float-brand {
+  position:absolute;
+  display:grid;
+  place-items:center;
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  background:linear-gradient(140deg,#303744,#191e28);
+  border:1px solid #ffffff16;
+  box-shadow:inset 0 1px #ffffff12,0 9px 20px #0004;
+  animation:levitate 6s ease-in-out infinite;
+}
+
+.float-brand .icon {
+  width:30px;
+  height:30px;
+}
+
+.float-brand.tg {
+  top:47px;
+  left:42px;
+  rotate:-12deg;
+  color:#7bc7ff;
+}
+
+.float-brand.st {
+  right:34px;
+  top:88px;
+  rotate:12deg;
+  color:#d2dfed;
+  animation-delay:-2s;
+}
+
+.float-brand.ig {
+  left:62px;
+  bottom:45px;
+  rotate:7deg;
+  color:#dea1d2;
+  animation-delay:-3s;
+}
+
+.float-brand.tt {
+  right:52px;
+  bottom:40px;
+  rotate:-10deg;
+  color:#83e4df;
+  animation-delay:-4s;
+}
+
+.hero-spark {
+  position:absolute;
+  font-size:21px;
+  color:#8da9d7;
+  right:26%;
+  top:42px;
+  animation:twinkle 5s ease-in-out infinite;
+}
+
+.hero-spark.second {
+  top:auto;
+  bottom:34px;
+  right:45%;
+  font-size:13px;
+  color:#baa6df;
+  animation-delay:-2s;
+}
+
+.hero-foot {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:17px 4px 0;
+  color:#7f899d;
+  font-size:10px;
+}
+
+.hero-foot span {
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+
+.hero-foot .icon {
+  width:13px;
+  height:13px;
+  color:#82a7df;
+}
+
+.hero-foot .dot {
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#626b7e;
+}
+
+.section {
+  margin-top:43px;
+}
+
+.section-heading {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.section-kicker {
+  display:block;
+  color:#7d8595;
+  font-size:9px;
+  letter-spacing:1.5px;
+  font-weight:600;
+  margin-bottom:7px;
+}
+
+h2 {
+  font-size:29px;
+  line-height:1.2;
+  letter-spacing:-.8px;
+  font-weight:700;
+}
+
+.section-count {
+  font-size:11px;
+  letter-spacing:1px;
+  color:#737c8f;
+  border:1px solid #2c313c;
+  padding:5px 10px;
+  border-radius:8px;
+  font-variant-numeric:tabular-nums;
+}
+
+.ripple {
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#b9d5ff30;
+  pointer-events:none;
+  animation:ripple .6s ease-out forwards;
+}
+
+.arcade {
+  background:radial-gradient(ellipse at 90% 0%,#7b4faa16,transparent 55%),linear-gradient(145deg,#1a1922,#13141b);
+  border:1px solid #33313e;
+  border-radius:24px;
+  padding:27px;
+  margin-top:40px;
+  position:relative;
+  overflow:hidden;
+}
+
+.arcade-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  gap:12px;
+}
+
+.arcade .section-kicker {
+  color:#a192b8;
+}
+
+.arcade h2 {
+  font-size:26px;
+}
+
+.arcade-heading p {
+  font-size:12px;
+  color:#9a94a8;
+  margin-top:8px;
+}
+
+.arcade-icon {
+  color:#bfaae0;
+  background:#31273e;
+  border:1px solid #59446755;
+  border-radius:17px;
+  width:56px;
+  height:56px;
+  display:grid;
+  place-items:center;
+  rotate:8deg;
+  flex-shrink:0;
+}
+
+.arcade-icon .icon {
+  width:31px;
+  height:31px;
+}
+
+.games {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+}
+
+.game {
+  min-width:0;
+  background:#1c1c27;
+  border:1px solid #34313f;
+  border-radius:17px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  transition:transform .22s,border-color .22s;
+}
+
+.game:hover {
+  transform:translateY(-4px);
+  border-color:#9d81c3;
+}
+
+.game-art {
+  height:140px;
+  background:radial-gradient(ellipse at center,#7a6fc223,transparent 75%),#232032;
+  position:relative;
+  overflow:hidden;
+}
+
+.game-art:before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(#ffffff04 1px,transparent 1px),linear-gradient(90deg,#ffffff04 1px,transparent 1px);
+  background-size:17px 17px;
+}
+
+.game-art>svg {
+  display:block;
+  position:relative;
+  width:100%;
+  height:100%;
+  padding:10px;
+}
+
+.game.snake .game-art {
+  background:radial-gradient(ellipse at center,#6eb99420,transparent 75%),#1c2926;
+}
+
+.game.flappy .game-art {
+  background:radial-gradient(ellipse at center,#bfaa6d20,transparent 75%),#2b271f;
+}
+
+.art-star {
+  position:absolute;
+  right:13px;
+  top:9px;
+  color:#c8baeb77;
+  font-size:12px;
+  animation:twinkle 4s ease-in-out infinite;
+}
+
+.snake .art-star {
+  color:#b4e6c277;
+  animation-delay:-1s;
+}
+
+.flappy .art-star {
+  color:#f5d49177;
+  animation-delay:-2s;
+}
+
+.little-bird {
+  animation:bird 2.4s ease-in-out infinite;
+}
+
+.game-name {
+  padding:14px 16px 8px;
+}
+
+.game-name>span {
+  color:#858195;
+  font-size:9px;
+}
+
+.game h3 {
+  font-size:18px;
+  line-height:1.4;
+  letter-spacing:-.4px;
+}
+
+.game-play {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:38px;
+  margin:6px 15px 15px;
+  border:1px solid #4c3f6155;
+  border-radius:10px;
+  background:#2c243b;
+  color:#d4bde9;
+  font-size:10px;
+  font-weight:600;
+  transition:background .2s;
+}
+
+.game-play .icon {
+  width:12px;
+  height:12px;
+}
+
+.game:hover .game-play {
+  background:#43315b;
+}
+
+.snake .game-play {
+  color:#b2d8c4;
+  background:#22382e;
+  border-color:#38574355;
+}
+
+.flappy .game-play {
+  color:#e0c69b;
+  background:#392f22;
+  border-color:#6c593b55;
+}
+
+.snake:hover .game-play {
+  background:#2d4c3c;
+}
+
+.flappy:hover .game-play {
+  background:#52402b;
+}
+
+.help {
+  display:grid;
+  grid-template-columns:1.1fr 1fr;
+  gap:14px;
+  margin-top:26px;
+}
+
+.help-link {
+  min-height:101px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:21px;
+  border:1px solid #2c313c;
+  border-radius:18px;
+  background:linear-gradient(125deg,#1b1e28,#14161d);
+  transition:border-color .2s,transform .2s;
+}
+
+.help-icon {
+  width:44px;
+  height:44px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:#24344f;
+  color:#9fc3ff;
+  flex-shrink:0;
+}
+
+.review-link .help-icon {
+  background:#342b20;
+  color:#dfc18b;
+}
+
+.help-link strong {
+  font-size:14px;
+  font-weight:650;
+  display:block;
+  line-height:1.4;
+}
+
+.help-link p {
+  font-size:11px;
+  color:#929bab;
+  margin-top:4px;
+  line-height:1.5;
+}
+
+.help-link>.icon {
+  margin-left:auto;
+  width:18px;
+  height:18px;
+  color:#75849b;
+}
+
+.help-link:hover {
+  border-color:#566782;
+  transform:translateY(-2px);
+}
+
+.footer {
+  padding-top:28px;
+  padding-bottom:calc(45px + max(env(safe-area-inset-bottom),var(--safe-bottom)) + var(--content-bottom));
+  color:#71798a;
+}
+
+.footer-line {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-top:1px solid #ffffff08;
+  padding-top:20px;
+}
+
+.footer-brand {
+  font-size:11px;
+  letter-spacing:.8px;
+  color:#838c9e;
+}
+
+.footer-note {
+  font-size:10px;
+  margin-top:3px;
+}
+
+.motion {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid #303642;
+  border-radius:10px;
+  background:#171a22;
+  padding:9px 11px;
+  min-height:44px;
+  font-size:10px;
+  color:#98a6bd;
+}
+
+.motion .icon {
+  width:14px;
+  height:14px;
+}
+
+.motion[aria-pressed="true"] {
+  color:#777f8d;
+  background:#14161b;
+}
+
+.bottom-nav {
+  display:none;
+}
+
+.reveal {
+  opacity:1;
+}
+
+.js-reveal .reveal {
+  opacity:0;
+  translate:0 12px;
+  transition:opacity .5s ease,translate .5s ease;
+  transition-delay:var(--delay,0ms);
+}
+
+.js-reveal .reveal.visible {
+  opacity:1;
+  translate:0 0;
+}
+
+a:active,button:active {
+  transform:scale(.98);
+}
+
+.motion-off *, .motion-off *:before,.motion-off *:after {
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important;
+}
+
+.motion-off .reveal {
+  opacity:1!important;
+  translate:0 0!important;
+}
+
+.page-hidden *,.page-hidden *:before,.page-hidden *:after {
+  animation-play-state:paused!important;
+}
+
+@keyframes levitate {
+  0%,100% {
+    translate:0 0;
+  }
+
+  50% {
+    translate:0 -8px;
+  }
+}
+
+@keyframes twinkle {
+  0%,100% {
+    opacity:.45;
+    transform:scale(.8) rotate(0);
+  }
+
+  50% {
+    opacity:1;
+    transform:scale(1) rotate(35deg);
+  }
+}
+
+@keyframes orbit {
+  to {
+    rotate:360deg;
+  }
+}
+
+@keyframes sheen {
+  0%,72% {
+    transform:translateX(-65%);
+  }
+
+  95%,100% {
+    transform:translateX(65%);
+  }
+}
+
+@keyframes card-sheen {
+  to {
+    transform:translateX(120%);
+  }
+}
+
+@keyframes ripple {
+  from {
+    transform:translate(-50%,-50%) scale(0);
+    opacity:.8;
+  }
+
+  to {
+    transform:translate(-50%,-50%) scale(20);
+    opacity:0;
+  }
+}
+
+@keyframes bird {
+  0%,100% {
+    translate:0 0;
+  }
+
+  50% {
+    translate:0 -6px;
+  }
+}
+
+@media(max-width:960px) {
+  .container {
+    max-width:760px;
+    padding-inline:24px;
+  }
+
+  .hero {
+    grid-template-columns:1.2fr .8fr;
+    min-height:330px;
+  }
+
+  .hero-copy {
+    padding:32px 0 32px 28px;
+  }
+
+  h1 {
+    font-size:43px;
+  }
+
+  .hero-art {
+    scale:.8;
+  }
+
+  .float-brand.tg {
+    left:0;
+    top:25px;
+  }
+
+  .float-brand.st {
+    right:-12px;
+    top:56px;
+  }
+
+  .float-brand.ig {
+    left:4px;
+    bottom:30px;
+  }
+
+  .float-brand.tt {
+    right:-4px;
+    bottom:25px;
+  }
+
+  .halo {
+    width:260px;
+    height:260px;
+  }
+
+  .desktop-nav {
+    gap:18px;
+  }
+
+  .hero-actions {
+    gap:12px;
+  }
+
+  .hero-foot {
+    font-size:9px;
+  }
+}
+
+@media(max-width:600px) {
+  html {
+    scroll-padding-top:80px;
+  }
+
+  .container {
+    padding-inline:18px;
+    max-width:500px;
+  }
+
+  .header-inner {
+    height:68px;
+    gap:10px;
+  }
+
+  .brand {
+    gap:8px;
+  }
+
+  .brand-name {
+    font-size:18px;
+    letter-spacing:-.6px;
+  }
+
+  .brand-caption {
+    font-size:6.5px;
+    letter-spacing:1.15px;
+  }
+
+  .desktop-nav {
+    display:none;
+  }
+
+  .header-help {
+    padding:9px;
+    min-width:42px;
+    min-height:42px;
+    border-radius:13px;
+  }
+
+  .header-help>span {
+    display:none;
+  }
+
+  .header-help .icon {
+    width:19px;
+  }
+
+  .hero {
+    display:block;
+    min-height:0;
+    margin-top:16px;
+    border-radius:24px;
+    overflow:hidden;
+    background:radial-gradient(ellipse at 100% 20%,#3860a72a,transparent 63%),linear-gradient(130deg,#1d2535,#13171f);
+  }
+
+  .hero-copy {
+    padding:26px 22px 25px;
+  }
+
+  .eyebrow {
+    font-size:7px;
+    letter-spacing:1.25px;
+    gap:6px;
+  }
+
+  h1 {
+    font-size:clamp(32px,8.3vw,41px);
+    letter-spacing:-1.5px;
+    line-height:1.1;
+    margin:15px 0 13px;
+    max-width:85%;
+  }
+
+  .hero-copy>p {
+    font-size:11px;
+    line-height:1.8;
+    max-width:72%;
+  }
+
+  .hero-actions {
+    margin-top:20px;
+    gap:10px;
+  }
+
+  .primary {
+    min-height:44px;
+    padding:11px 14px;
+    font-size:10px;
+    gap:17px;
+    border-radius:11px;
+  }
+
+  .primary .icon {
+    width:15px;
+  }
+
+  .hero-actions .quiet-link {
+    display:none;
+  }
+
+  .hero-art {
+    position:absolute;
+    right:-10px;
+    bottom:22px;
+    width:112px;
+    height:138px;
+    scale:1;
+    opacity:.92;
+    z-index:1;
+  }
+
+  .halo {
+    width:134px;
+    height:134px;
+    box-shadow:0 0 0 18px #6c92c905,0 0 0 36px #6c92c903;
+  }
+
+  .halo:after {
+    inset:13px;
+  }
+
+  .emblem {
+    width:68px;
+    height:68px;
+    border-radius:18px;
+    transform:rotate(-15deg);
+    box-shadow:inset 0 1px #ffffff33,0 10px 25px #0004;
+  }
+
+  .emblem .icon {
+    width:43px;
+    height:43px;
+  }
+
+  .float-brand {
+    width:30px;
+    height:30px;
+    border-radius:9px;
+  }
+
+  .float-brand .icon {
+    width:16px;
+    height:16px;
+  }
+
+  .float-brand.tg {
+    left:0;
+    top:6px;
+  }
+
+  .float-brand.st {
+    right:8px;
+    top:19px;
+  }
+
+  .float-brand.ig {
+    left:3px;
+    bottom:11px;
+  }
+
+  .float-brand.tt {
+    right:4px;
+    bottom:9px;
+  }
+
+  .hero-spark {
+    font-size:10px;
+    top:3px;
+    right:35%;
+  }
+
+  .hero-spark.second {
+    font-size:8px;
+    bottom:5px;
+  }
+
+  .hero-foot {
+    padding:12px 2px 0;
+    font-size:8px;
+    gap:7px;
+  }
+
+  .hero-foot span {
+    gap:4px;
+  }
+
+  .hero-foot .icon {
+    width:11px;
+    height:11px;
+  }
+
+  .hero-foot .desktop-only {
+    display:none;
+  }
+
+  .section {
+    margin-top:29px;
+  }
+
+  .section-heading {
+    margin-bottom:15px;
+  }
+
+  .section-kicker {
+    font-size:7px;
+    letter-spacing:1.45px;
+    margin-bottom:5px;
+  }
+
+  h2 {
+    font-size:24px;
+    letter-spacing:-.65px;
+  }
+
+  .section-count {
+    font-size:9px;
+    padding:4px 8px;
+    border-radius:7px;
+  }
+
+  .arcade {
+    padding:19px 13px 14px;
+    border-radius:23px;
+    margin-top:29px;
+  }
+
+  .arcade-heading {
+    margin-bottom:17px;
+    padding-inline:3px;
+    gap:10px;
+  }
+
+  .arcade h2 {
+    font-size:22px;
+  }
+
+  .arcade-heading p {
+    font-size:10px;
+    line-height:1.6;
+    max-width:220px;
+    margin-top:6px;
+  }
+
+  .arcade-icon {
+    width:41px;
+    height:41px;
+    border-radius:13px;
+  }
+
+  .arcade-icon .icon {
+    width:24px;
+    height:24px;
+  }
+
+  .games {
+    gap:8px;
+  }
+
+  .game {
+    border-radius:13px;
+  }
+
+  .game-art {
+    height:86px;
+  }
+
+  .game-art>svg {
+    padding:0;
+  }
+
+  .art-star {
+    font-size:8px;
+    right:7px;
+    top:5px;
+  }
+
+  .game-name {
+    padding:9px 9px 4px;
+  }
+
+  .game-name>span {
+    font-size:7px;
+  }
+
+  .game h3 {
+    font-size:14px;
+    letter-spacing:-.3px;
+  }
+
+  .game-play {
+    margin:6px 7px 8px;
+    min-height:34px;
+    font-size:9px;
+    border-radius:8px;
+    gap:3px;
+  }
+
+  .game-play .icon {
+    width:10px;
+    height:10px;
+  }
+
+  .help {
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-top:23px;
+  }
+
+  .help-link {
+    padding:16px;
+    min-height:84px;
+    gap:12px;
+    border-radius:17px;
+  }
+
+  .help-icon {
+    width:40px;
+    height:40px;
+    border-radius:13px;
+  }
+
+  .help-icon .icon {
+    width:21px;
+    height:21px;
+  }
+
+  .help-link strong {
+    font-size:13px;
+  }
+
+  .help-link p {
+    font-size:10px;
+    margin-top:3px;
+  }
+
+  .help-link>.icon {
+    width:16px;
+    height:16px;
+  }
+
+  .review-link {
+    min-height:78px;
+    background:#15171d;
+  }
+
+  .footer {
+    padding-top:25px;
+    padding-bottom:calc(115px + max(env(safe-area-inset-bottom),var(--safe-bottom)) + var(--content-bottom));
+  }
+
+  .footer-line {
+    padding-top:17px;
+    gap:8px;
+  }
+
+  .footer-brand {
+    font-size:10px;
+  }
+
+  .footer-note {
+    font-size:8px;
+  }
+
+  .motion {
+    font-size:8px;
+    gap:5px;
+    padding:8px 9px;
+    min-height:40px;
+  }
+
+  .motion .icon {
+    width:12px;
+    height:12px;
+  }
+
+  .bottom-nav {
+    display:flex;
+    position:fixed;
+    bottom:calc(12px + max(env(safe-area-inset-bottom),var(--safe-bottom)) + var(--content-bottom));
+    left:calc(18px + var(--safe-left) + var(--content-left));
+    right:calc(18px + var(--safe-right) + var(--content-right));
+    max-width:464px;
+    margin-inline:auto;
+    padding:6px;
+    background:#191d28f2;
+    backdrop-filter:blur(20px);
+    border:1px solid #3d465966;
+    box-shadow:0 8px 40px #0009,inset 0 1px #ffffff08;
+    border-radius:21px;
+    z-index:30;
+    gap:4px;
+  }
+
+  .bottom-nav a {
+    display:flex;
+    flex:1;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-width:0;
+    min-height:51px;
+    gap:3px;
+    border-radius:15px;
+    color:#8c97ad;
+    transition:background .2s,color .2s;
+  }
+
+  .bottom-nav .icon {
+    width:20px;
+    height:20px;
+  }
+
+  .bottom-nav span {
+    font-size:8px;
+  }
+
+  .bottom-nav a[aria-current="location"] {
+    background:linear-gradient(140deg,#2b4d7b,#203b63);
+    color:#b2d1ff;
+    box-shadow:inset 0 1px #ffffff0d;
+  }
+
+  .bottom-nav a[aria-current="location"] .icon {
+    filter:drop-shadow(0 0 7px #93baff33);
+  }
+}
+
+@media(max-width:360px) {
+  .container {
+    padding-inline:14px;
+  }
+
+  .hero-copy {
+    padding:23px 17px;
+  }
+
+  .hero-copy>p {
+    font-size:10px;
+    max-width:72%;
+  }
+
+  h1 {
+    font-size:30px;
+    letter-spacing:-1.3px;
+  }
+
+  .hero-art {
+    right:-20px;
+    width:100px;
+    scale:.88;
+    bottom:18px;
+  }
+
+  .hero-foot {
+    font-size:7px;
+  }
+
+  .hero-foot .icon {
+    width:10px;
+  }
+
+  .game-art {
+    height:72px;
+  }
+
+  .game-name {
+    padding:8px 7px 3px;
+  }
+
+  .game h3 {
+    font-size:13px;
+  }
+
+  .game-play {
+    font-size:8px;
+    min-height:32px;
+    margin-inline:5px;
+  }
+
+  .arcade {
+    padding-inline:11px;
+  }
+
+  .arcade h2 {
+    font-size:20px;
+  }
+
+  .arcade-heading p {
+    font-size:9px;
+  }
+
+  .arcade-icon {
+    width:35px;
+    height:35px;
+    border-radius:11px;
+  }
+
+  .arcade-icon .icon {
+    width:22px;
+    height:22px;
+  }
+
+  .help-link {
+    padding:14px;
+  }
+
+  .bottom-nav {
+    left:calc(14px + var(--safe-left) + var(--content-left));
+    right:calc(14px + var(--safe-right) + var(--content-right));
+  }
+
+  .motion {
+    font-size:7px;
+  }
+
+  .footer-note {
+    font-size:7px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior:auto;
+  }
+
+  *,*:before,*:after {
+    animation:none!important;
+    transition:none!important;
+  }
+
+  .js-reveal .reveal {
+    opacity:1;
+    translate:0 0;
+  }
+}
+
+.stores {
+  gap:15px;
+  align-items:stretch;
+}
+
+.store {
+  padding:0;
+  min-height:300px;
+  border-radius:22px;
+  background:linear-gradient(155deg,#1d2029,#15171e);
+  border-color:#343946;
+  box-shadow:inset 0 1px #ffffff0a,0 5px 18px #0002;
+}
+
+.store.telegram {
+  --accent:#81c4ff;
+  --cover:#1d3857;
+  --cover-end:#192636;
+}
+
+.store.steam {
+  --accent:#c6d9f3;
+  --cover:#2d394b;
+  --cover-end:#202632;
+}
+
+.store.verify {
+  --accent:#94dfb9;
+  --cover:#244037;
+  --cover-end:#1b2a25;
+}
+
+.store.smm {
+  --accent:#d7b1f4;
+  --cover:#3e2c4c;
+  --cover-end:#282130;
+}
+
+.store-top {
+  height:103px;
+  margin:0;
+  padding:22px;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(125deg,var(--cover),var(--cover-end));
+  border-bottom:1px solid #ffffff07;
+}
+
+.store-top:before {
+  content:'';
+  position:absolute;
+  width:160px;
+  height:160px;
+  right:-55px;
+  top:-95px;
+  border:1px solid #ffffff0b;
+  border-radius:50%;
+  box-shadow:0 0 0 22px #ffffff03,0 0 0 44px #ffffff02;
+  pointer-events:none;
+}
+
+.service-icon {
+  width:57px;
+  height:57px;
+  border-radius:18px;
+  position:relative;
+  z-index:1;
+  background:linear-gradient(145deg,#ffffff10,#ffffff03);
+  border-color:#ffffff1c;
+  box-shadow:inset 0 1px #ffffff1a,0 6px 18px #0002;
+  backdrop-filter:blur(8px);
+}
+
+.service-icon>.icon {
+  width:32px;
+  height:32px;
+}
+
+.service-watermark {
+  position:absolute;
+  right:13px;
+  top:15px;
+  color:var(--accent);
+  opacity:.09;
+  rotate:-15deg;
+  transition:transform .5s,opacity .5s;
+  pointer-events:none;
+}
+
+.service-watermark>.icon {
+  width:102px;
+  height:102px;
+}
+
+.service-number {
+  position:absolute;
+  top:15px;
+  right:17px;
+  color:#ffffff48;
+  font-size:9px;
+  letter-spacing:1.5px;
+  font-variant-numeric:tabular-nums;
+}
+
+.store-copy {
+  padding:20px 20px 0;
+}
+
+.store-category {
+  font-size:9px;
+  letter-spacing:.2px;
+  margin-bottom:6px;
+  opacity:.9;
+}
+
+.store h3 {
+  font-size:21px;
+  letter-spacing:-.55px;
+  margin-bottom:9px;
+  line-height:1.25;
+  overflow-wrap:normal;
+}
+
+.store-desc {
+  font-size:11px;
+  color:#a1aaba;
+  line-height:1.65;
+}
+
+.store-foot,.store.smm .store-foot {
+  border-top:0;
+  margin:0;
+  padding:14px 20px 18px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:13px;
+}
+
+.store-chips {
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  min-height:22px;
+  align-items:center;
+}
+
+.store-chips>span {
+  padding:3px 7px;
+  border:1px solid #ffffff0a;
+  border-radius:6px;
+  background:#ffffff04;
+  color:#a4adbd;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.social-icons {
+  gap:7px;
+  min-height:22px;
+  align-items:center;
+}
+
+.social-icons>span {
+  width:22px;
+  height:22px;
+  border:1px solid #ffffff0d;
+  background:#ffffff04;
+  border-radius:6px;
+}
+
+.social-icons .icon {
+  width:12px;
+  height:12px;
+}
+
+.store-open {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:41px;
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid color-mix(in srgb,var(--accent) 18%,transparent);
+  background:color-mix(in srgb,var(--accent) 8%,#181b23);
+  color:var(--accent);
+  font-size:10px;
+  font-weight:600;
+  transition:background .2s,border-color .2s,box-shadow .2s;
+}
+
+.store-open .icon {
+  width:15px;
+  height:15px;
+  transition:translate .2s;
+}
+
+.store.telegram .store-open {
+  background:linear-gradient(130deg,#326bad,#255388);
+  border-color:#659de34d;
+  color:#e1eeff;
+  box-shadow:inset 0 1px #ffffff0d;
+}
+
+.store:hover .service-watermark {
+  opacity:.16;
+  transform:translate(-4px,-3px) rotate(6deg);
+}
+
+.store:hover .store-open {
+  background:color-mix(in srgb,var(--accent) 17%,#181b23);
+  border-color:color-mix(in srgb,var(--accent) 38%,transparent);
+  box-shadow:0 4px 14px var(--glow);
+}
+
+.store.telegram:hover .store-open {
+  background:#3677bc;
+}
+
+.store:hover .store-open .icon {
+  translate:3px 0;
+}
+
+.store:focus-visible {
+  outline-color:var(--accent);
+}
+
+@media(max-width:960px) {
+  .stores {
+    gap:13px;
+  }
+
+  .store {
+    min-height:280px;
+  }
+
+  .store-top {
+    height:95px;
+  }
+
+  .store-copy {
+    padding-top:17px;
+  }
+
+  .store-foot,.store.smm .store-foot {
+    padding-top:12px;
+  }
+}
+
+@media(max-width:600px) {
+  .stores {
+    gap:11px;
+  }
+
+  .store {
+    min-height:267px;
+    padding:0;
+    border-radius:19px;
+  }
+
+  .store-top {
+    height:88px;
+    padding:16px;
+  }
+
+  .service-icon {
+    width:49px;
+    height:49px;
+    border-radius:15px;
+  }
+
+  .service-icon>.icon {
+    width:28px;
+    height:28px;
+  }
+
+  .service-watermark {
+    right:4px;
+    top:15px;
+  }
+
+  .service-watermark>.icon {
+    width:83px;
+    height:83px;
+  }
+
+  .service-number {
+    right:12px;
+    top:12px;
+    font-size:8px;
+  }
+
+  .store-copy {
+    padding:15px 14px 0;
+  }
+
+  .store-category {
+    font-size:7px;
+    letter-spacing:0;
+    margin-bottom:6px;
+  }
+
+  .store h3 {
+    font-size:18px;
+    letter-spacing:-.45px;
+    margin-bottom:8px;
+  }
+
+  .store.smm h3 {
+    font-size:16px;
+  }
+
+  .store-desc {
+    font-size:10px;
+    line-height:1.6;
+  }
+
+  .store-foot,.store.smm .store-foot {
+    padding:11px 13px 13px;
+    gap:11px;
+    align-items:stretch;
+  }
+
+  .store-chips {
+    gap:4px;
+    min-height:20px;
+  }
+
+  .store-chips>span {
+    font-size:7px;
+    padding:3px 5px;
+  }
+
+  .social-icons {
+    gap:5px;
+    min-height:20px;
+  }
+
+  .social-icons>span {
+    width:20px;
+    height:20px;
+  }
+
+  .social-icons .icon {
+    width:11px;
+    height:11px;
+  }
+
+  .store-open {
+    min-height:38px;
+    border-radius:9px;
+    padding:9px 10px;
+    font-size:9px;
+  }
+
+  .store-open .icon {
+    width:14px;
+    height:14px;
+  }
+}
+
+@media(max-width:360px) {
+  .stores {
+    gap:9px;
+  }
+
+  .store {
+    min-height:273px;
+    border-radius:17px;
+  }
+
+  .store-top {
+    height:82px;
+    padding:14px;
+  }
+
+  .service-icon {
+    width:45px;
+    height:45px;
+    border-radius:14px;
+  }
+
+  .service-icon>.icon {
+    width:26px;
+    height:26px;
+  }
+
+  .service-watermark>.icon {
+    width:74px;
+    height:74px;
+  }
+
+  .store-copy {
+    padding:14px 11px 0;
+  }
+
+  .store-category {
+    font-size:6.5px;
+  }
+
+  .store h3 {
+    font-size:16px;
+  }
+
+  .store.smm h3 {
+    font-size:14px;
+  }
+
+  .store-desc {
+    font-size:9px;
+  }
+
+  .store-foot,.store.smm .store-foot {
+    padding:11px;
+    gap:10px;
+  }
+
+  .store-chips>span {
+    font-size:6.5px;
+    padding:3px 4px;
+  }
+
+  .store-open {
+    font-size:8px;
+    padding-inline:9px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .store,.service-watermark,.store-open,.store-open .icon {
+    transition:none!important;
+  }
+}
+
+:root {
+  --header-height:82px;
+  --radius-control:12px;
+  --ease-out:cubic-bezier(.22,.7,.26,1);
+}
+
+html {
+  scroll-padding-top:calc(var(--header-height) + var(--safe-top) + var(--content-top) + 16px);
+  scrollbar-gutter:stable;
+}
+
+body {
+  min-width:280px;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  font-kerning:normal;
+}
+
+button,a {
+  -webkit-user-drag:none;
+}
+
+button {
+  appearance:none;
+  -webkit-appearance:none;
+}
+
+.icon-defs {
+  position:absolute;
+  width:0;
+  height:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+.header {
+  top:calc(var(--safe-top) + var(--content-top));
+}
+
+.header-inner {
+  min-width:0;
+}
+
+.brand {
+  flex-shrink:1;
+  min-width:0;
+}
+
+.brand-name {
+  white-space:nowrap;
+}
+
+.brand-caption {
+  line-height:1.5;
+}
+
+.hero-copy {
+  min-width:0;
+}
+
+h1,h2,h3 {
+  text-wrap:balance;
+}
+
+.store h3 {
+  text-wrap:pretty;
+}
+
+.store-desc,.help-link p {
+  overflow-wrap:anywhere;
+}
+
+.primary:focus-visible,.header-help:focus-visible,.bottom-nav a:focus-visible {
+  outline:2px solid #bad7ff;
+  outline-offset:4px;
+  box-shadow:0 0 0 6px #397bdd24;
+}
+
+.store:after {
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(115deg,transparent 20%,#ffffff06 42%,transparent 66%);
+  transform:translateX(-120%);
+}
+
+.store {
+  transition:border-color .25s var(--ease-out),transform .25s var(--ease-out),box-shadow .25s var(--ease-out);
+}
+
+.store:active,.game:active {
+  transform:scale(.982);
+}
+
+.store-copy {
+  min-width:0;
+}
+
+.store-category {
+  line-height:1.5;
+}
+
+.store-desc {
+  line-height:1.7;
+}
+
+.store-chips {
+  align-content:center;
+}
+
+.store-open {
+  min-height:44px;
+  line-height:1.3;
+  letter-spacing:.1px;
+}
+
+.service-number {
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-feature-settings:'tnum';
+}
+
+.service-icon,.help-icon,.arcade-icon {
+  flex-shrink:0;
+}
+
+.service-watermark {
+  pointer-events:none;
+}
+
+.hero-spark,.art-star,.hero-art,.game-art {
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+.game-play {
+  min-height:44px;
+  line-height:1.2;
+}
+
+.game-name {
+  flex:1;
+}
+
+.game-name>span {
+  letter-spacing:.35px;
+}
+
+.game-name h3 {
+  margin-top:2px;
+}
+
+.help-link>div {
+  min-width:0;
+}
+
+.help-link>.icon {
+  flex-shrink:0;
+}
+
+.section-count {
+  line-height:1.5;
+}
+
+.social-icons .icon {
+  display:block;
+}
+
+.footer-line {
+  flex-wrap:wrap;
+  row-gap:14px;
+}
+
+.footer-controls {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.motion {
+  min-height:44px;
+  font-size:10px;
+}
+
+.motion[aria-pressed='true'] {
+  background:#192334;
+  border-color:#344663;
+  color:#a9c9f5;
+}
+
+.motion[aria-pressed='false'] {
+  background:#14161b;
+  border-color:#2d313a;
+  color:#9aa2b1;
+}
+
+.motion:disabled {
+  opacity:.8;
+  cursor:default;
+  transform:none;
+}
+
+.back-top {
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  border:1px solid #303642;
+  background:#171a22;
+  color:#99a9c1;
+}
+
+.back-top .icon {
+  width:16px;
+  height:16px;
+  rotate:-90deg;
+}
+
+.bottom-nav a {
+  position:relative;
+}
+
+.bottom-nav a:after {
+  content:'';
+  position:absolute;
+  bottom:5px;
+  width:12px;
+  height:2px;
+  border-radius:2px;
+  background:currentColor;
+  opacity:0;
+  transform:scaleX(.5);
+  transition:opacity .2s,transform .2s;
+}
+
+.bottom-nav a[aria-current='location']:after {
+  opacity:.6;
+  transform:scaleX(1);
+}
+
+.bottom-nav a span {
+  padding-bottom:3px;
+}
+
+.desktop-nav a[aria-current='location'] {
+  color:#bed8ff;
+}
+
+@media(hover:hover) and (pointer:fine) {
+  .store:hover {
+    border-color:color-mix(in srgb,var(--accent) 50%,#303540);
+    box-shadow:0 10px 28px var(--glow);
+    transform:translateY(-4px);
+  }
+
+  .store:hover:after {
+    animation:card-sheen .75s ease;
+  }
+
+  .back-top:hover {
+    background:#24324a;
+    color:#d3e5ff;
+    border-color:#49638a;
+  }
+
+  .header-help:hover {
+    color:#d8e8ff;
+  }
+}
+
+@media(hover:none) {
+  .store:hover,.game:hover,.help-link:hover,.primary:hover {
+    transform:none;
+  }
+
+  .store:hover .service-watermark {
+    opacity:.09;
+    transform:none;
+  }
+
+  .store:hover .service-icon {
+    transform:none;
+  }
+
+  .store:hover .store-open .icon {
+    translate:0 0;
+  }
+
+  .store:hover:after {
+    animation:none;
+  }
+
+  .store:active,.game:active {
+    transform:scale(.982);
+  }
+}
+
+@media(max-width:600px) {
+  :root {
+    --header-height:68px;
+  }
+
+  .hero-copy h1 {
+    max-width:100%;
+  }
+
+  .store-open,.game-play {
+    min-height:40px;
+  }
+
+  .motion {
+    font-size:8px;
+  }
+
+  .game-name {
+    padding-bottom:5px;
+  }
+
+  .footer-line {
+    align-items:center;
+  }
+
+  .back-top {
+    width:40px;
+    height:44px;
+  }
+
+  .help-link {
+    min-height:86px;
+  }
+
+  .bottom-nav a {
+    min-height:53px;
+  }
+
+  .section-kicker {
+    line-height:1.6;
+  }
+
+  .header-help {
+    min-height:44px;
+    min-width:44px;
+  }
+
+  .hero-foot {
+    flex-wrap:wrap;
+    row-gap:6px;
+  }
+}
+
+@media(max-width:360px) {
+  .store-open {
+    min-height:40px;
+  }
+
+  .game-play {
+    min-height:38px;
+  }
+
+  .footer-controls {
+    gap:6px;
+  }
+
+  .footer-line {
+    column-gap:7px;
+  }
+
+  .motion {
+    font-size:7px;
+    padding-inline:8px;
+  }
+
+  .back-top {
+    width:36px;
+  }
+
+  .hero-copy h1 {
+    font-size:29px;
+  }
+
+  .hero-copy>p {
+    max-width:73%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior:auto;
+  }
+
+  *,*:before,*:after {
+    animation:none!important;
+    transition:none!important;
+  }
+
+  .js-reveal .reveal {
+    opacity:1;
+    translate:0 0;
+  }
+}
+
+@media(forced-colors:active) {
+  .store,.game,.primary,.bottom-nav,.header-help,.help-link,.motion {
+    border:1px solid ButtonText;
+  }
+
+  .store-open,.game-play {
+    border:1px solid LinkText;
+  }
+
+  .bottom-nav a[aria-current='location'] {
+    outline:2px solid Highlight;
+  }
+
+  .service-watermark,.hero-art,.hero-spark {
+    display:none;
+  }
+}
+
+.store { --glow:#5ba7ff1a; display:flex; flex-direction:column; min-width:0; position:relative; overflow:hidden; isolation:isolate; }
+.store.steam { --glow:#b0c7ea0d; }
+.store.verify { --glow:#69d99d15; }
+.store.smm { --glow:#c08bea1a; }
+.store-top { display:flex; justify-content:space-between; }
+.store-copy { flex:1; }
+.store-category { color:var(--accent); }
+.service-icon { display:grid; place-items:center; color:var(--accent); transition:transform .3s; }
+.social-icons { display:flex; }
+.social-icons>span { display:grid; place-items:center; color:#c6b6d5; }
+
+
+/* Геометрия каталога: четыре колонки на широком экране, две на телефоне. */
+.stores { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
+@media(max-width:960px) { .stores { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+</style>
+  </head>
+  <body>
+    <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <symbol id="symbol-1" viewBox="0 0 24 24">
+        <path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path>
+        <path d="M21 16v2a4 4 0 0 1-4 4h-5"></path>
+      </symbol>
+      <symbol id="symbol-2" viewBox="0 0 24 24">
+        <path d="M5 12h14m-5-5 5 5-5 5"></path>
+      </symbol>
+      <symbol id="symbol-3" viewBox="0 0 24 24">
+        <line x1="6" x2="10" y1="11" y2="11"></line>
+        <line x1="8" x2="8" y1="9" y2="13"></line>
+        <line x1="15" x2="15.01" y1="12" y2="12"></line>
+        <line x1="18" x2="18.01" y1="10" y2="10"></line>
+        <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path>
+      </symbol>
+      <symbol id="symbol-4" viewBox="0 0 24 24">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path>
+      </symbol>
+      <symbol id="symbol-5" viewBox="0 0 24 24">
+        <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"></path>
+      </symbol>
+      <symbol id="symbol-6" viewBox="0 0 24 24">
+        <path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"></path>
+      </symbol>
+      <symbol id="symbol-7" viewBox="0 0 24 24">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path>
+      </symbol>
+      <symbol id="symbol-8" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+        <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+        <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+        <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+      </symbol>
+      <symbol id="symbol-9" viewBox="0 0 24 24">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+        <path d="m9 12 2 2 4-4"></path>
+      </symbol>
+      <symbol id="symbol-10" viewBox="0 0 24 24">
+        <path d="m9 5 11 7-11 7V5Z"></path>
+      </symbol>
+      <symbol id="symbol-11" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12"></path>
+      </symbol>
+    </svg>
+    <a href="#catalog" class="skip">Перейти к магазинам</a>
+    <header class="header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="LegitAssets — главная">
+          <span>
+            <span class="brand-name">LegitAssets</span>
+            <span class="brand-caption">МАГАЗИНЫ · СЕРВИСЫ · ИГРЫ</span>
+          </span>
+        </a>
+        <nav class="desktop-nav" aria-label="Разделы сайта">
+          <a href="#catalog">Магазины</a>
+          <a href="#games">Игры</a>
+          <a href="#help">Помощь</a>
+        </nav>
+        <a class="header-help" href="https://t.me/MarshalDeals" target="_blank" rel="noopener noreferrer" aria-label="Поддержка в Telegram">
+          <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <use href="#symbol-1"></use>
+          </svg>
+          <span>На связи</span>
+        </a>
+      </div>
+    </header>
+    <main class="container" id="top" tabindex="-1">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <span class="eyebrow">ТВОЙ ЦИФРОВОЙ ХАБ</span>
+          <h1 id="hero-title">Всё нужное.<br>
+            <em>В одном месте.</em>
+          </h1>
+          <p>Магазины, сервисы и игры —<br>в одном мини-приложении.</p>
+          <div class="hero-actions">
+            <a class="primary" href="#catalog">Выбрать магазин<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <use href="#symbol-2"></use>
+              </svg>
+            </a>
+            <a class="quiet-link" href="#games">Или поиграть<svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <use href="#symbol-3"></use>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="halo"></div>
+          <div class="emblem">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"></path>
+              <path d="M8 7v9h8m-4-9v5h4"></path>
+            </svg>
+          </div>
+          <span class="float-brand tg">
+            <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <use href="#symbol-4"></use>
+            </svg>
+          </span>
+          <span class="float-brand st">
+            <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <use href="#symbol-5"></use>
+            </svg>
+          </span>
+          <span class="float-brand ig">
+            <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <use href="#symbol-6"></use>
+            </svg>
+          </span>
+          <span class="float-brand tt">
+            <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <use href="#symbol-7"></use>
+            </svg>
+          </span>
+          <span class="hero-spark">✦</span>
+          <span class="hero-spark second">✧</span>
+        </div>
+      </section>
+      <div class="hero-foot">
+        <span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <use href="#symbol-8"></use>
+          </svg>4 магазина в каталоге</span>
+        <i class="dot" aria-hidden="true"></i>
+        <span>
+          <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <use href="#symbol-3"></use>
+          </svg>
+3 игры для перерыва</span>
+        <span class="desktop-only">
+          <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <use href="#symbol-4"></use>
+          </svg>Внутри Telegram</span>
+      </div>
+      <section class="section" id="catalog" aria-labelledby="catalog-title" tabindex="-1">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">МАГАЗИНЫ И СЕРВИСЫ</span>
+            <h2 id="catalog-title">Выбирай своё</h2>
+          </div>
+          <span class="section-count" aria-label="4 магазина">04</span>
+        </div>
+        <div class="stores">
+          <a class="store telegram reveal" href="https://liltesso.github.io/legit-shop-telegram/ru/" aria-labelledby="store-telegram-title" aria-describedby="store-telegram-description">
+            <div class="store-top">
+              <span class="service-watermark" aria-hidden="true">
+                <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                  <use href="#symbol-4"></use>
+                </svg>
+              </span>
+              <span class="service-icon">
+                <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                  <use href="#symbol-4"></use>
+                </svg>
+              </span>
+              <span class="service-number" aria-hidden="true">01</span>
+            </div>
+            <div class="store-copy">
+              <p class="store-category">Всё для мессенджера</p>
+              <h3 id="store-telegram-title">Telegram</h3>
+              <p class="store-desc" id="store-telegram-description">Аккаунты, сессии и звёзды.</p>
+            </div>
+            <div class="store-foot">
+              <div class="store-chips">
+                <span>Аккаунты</span>
+                <span>Звёзды</span>
+              </div>
+              <span class="store-open" aria-hidden="true">В магазин<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <use href="#symbol-2"></use>
+                </svg>
+              </span>
+            </div>
+          </a>
+          <a class="store steam reveal" href="https://liltesso.github.io/legit-shop-steam/ru/" aria-labelledby="store-steam-title" aria-describedby="store-steam-description">
+            <div class="store-top">
+              <span class="service-watermark" aria-hidden="true">
+                <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                  <use href="#symbol-5"></use>
+                </svg>
+              </span>
+              <span class="service-icon">
+                <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                  <use href="#symbol-5"></use>
+                </svg>
+              </span>
+              <span class="service-number" aria-hidden="true">02</span>
+            </div>
+            <div class="store-copy">
+              <p class="store-category">Твоя игровая коллекция</p>
+              <h3 id="store-steam-title">Steam</h3>
+              <p class="store-desc" id="store-steam-description">Аккаунты с играми.</p>
+            </div>
+            <div class="store-foot">
+              <div class="store-chips">
+                <span>Игры</span>
+                <span>Аккаунты</span>
+              </div>
+              <span class="store-open" aria-hidden="true">В магазин<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <use href="#symbol-2"></use>
+                </svg>
+              </span>
+            </div>
+          </a>
+          <a class="store verify reveal" href="https://liltesso.github.io/legit-shop-verify/ru/" aria-labelledby="store-verify-title" aria-describedby="store-verify-description">
+            <div class="store-top">
+              <span class="service-watermark" aria-hidden="true">
+                <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <use href="#symbol-9"></use>
+                </svg>
+              </span>
+              <span class="service-icon">
+                <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <use href="#symbol-9"></use>
+                </svg>
+              </span>
+              <span class="service-number" aria-hidden="true">03</span>
+            </div>
+            <div class="store-copy">
+              <p class="store-category">Цифровые сервисы</p>
+              <h3 id="store-verify-title">Верификация</h3>
+              <p class="store-desc" id="store-verify-description">Каталог услуг верификации.</p>
+            </div>
+            <div class="store-foot">
+              <div class="store-chips">
+                <span>Верификация</span>
+              </div>
+              <span class="store-open" aria-hidden="true">В магазин<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <use href="#symbol-2"></use>
+                </svg>
+              </span>
+            </div>
+          </a>
+          <a class="store smm reveal" href="https://liltesso.github.io/legit-shop-smm/ru/" aria-labelledby="store-smm-title" aria-describedby="store-smm-description">
+            <div class="store-top">
+              <span class="service-watermark" aria-hidden="true">
+                <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                  <use href="#symbol-6"></use>
+                </svg>
+              </span>
+              <span class="service-icon">
+                <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                  <use href="#symbol-6"></use>
+                </svg>
+              </span>
+              <span class="service-number" aria-hidden="true">04</span>
+            </div>
+            <div class="store-copy">
+              <p class="store-category">Социальные сети</p>
+              <h3 id="store-smm-title">СММ-продвижение</h3>
+              <p class="store-desc" id="store-smm-description">TikTok, Instagram, Threads и Telegram.</p>
+            </div>
+            <div class="store-foot">
+              <div class="social-icons" aria-label="TikTok, Instagram, Threads, Telegram">
+                <span>
+                  <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <use href="#symbol-7"></use>
+                  </svg>
+                </span>
+                <span>
+                  <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <use href="#symbol-6"></use>
+                  </svg>
+                </span>
+                <span>
+                  <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"></path>
+                  </svg>
+                </span>
+                <span>
+                  <svg fill="currentColor" aria-hidden="true" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <use href="#symbol-4"></use>
+                  </svg>
+                </span>
+              </div>
+              <span class="store-open" aria-hidden="true">В магазин<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <use href="#symbol-2"></use>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      </section>
+      <section class="arcade" id="games" aria-labelledby="games-title" tabindex="-1">
+        <div class="arcade-heading">
+          <div>
+            <span class="section-kicker">МОЖНО ПРОСТО ПОИГРАТЬ</span>
+            <h2 id="games-title">Игровая пауза</h2>
+            <p>Выбирай игру и отвлекись на пару минут.</p>
+          </div>
+          <span class="arcade-icon" aria-hidden="true">
+            <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <use href="#symbol-3"></use>
+            </svg>
+          </span>
+        </div>
+        <div class="games">
+          <a class="game tetris reveal" href="games/tetris.html" aria-labelledby="game-tetris-title">
+            <div class="game-art" aria-hidden="true">
+              <svg viewBox="0 0 150 120" fill="none" focusable="false">
+                <rect x="28" y="34" width="23" height="23" rx="4" fill="#a495fa" stroke="#c5bbff" stroke-width="2"></rect>
+                <rect x="53" y="34" width="23" height="23" rx="4" fill="#a495fa" stroke="#c5bbff" stroke-width="2"></rect>
+                <rect x="78" y="34" width="23" height="23" rx="4" fill="#a495fa" stroke="#c5bbff" stroke-width="2"></rect>
+                <rect x="53" y="59" width="23" height="23" rx="4" fill="#a495fa" stroke="#c5bbff" stroke-width="2"></rect>
+                <rect x="103" y="84" width="23" height="23" rx="4" fill="#f1bd75" stroke="#ffe0a7" stroke-width="2"></rect>
+              </svg>
+              <span class="art-star">✦</span>
+            </div>
+            <div class="game-name">
+              <span>Классика</span>
+              <h3 id="game-tetris-title">Тетрис</h3>
+            </div>
+            <span class="game-play">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <use href="#symbol-10"></use>
+              </svg>
+              <span>Играть</span>
+            </span>
+          </a>
+          <a class="game snake reveal" href="games/snake.html" aria-labelledby="game-snake-title">
+            <div class="game-art" aria-hidden="true">
+              <svg viewBox="0 0 150 120" fill="none" focusable="false">
+                <path d="M35 35v40h53V50h22" stroke="#82c99e" stroke-width="19" stroke-linejoin="round"></path>
+                <rect x="25" y="20" width="20" height="21" rx="5" fill="#b3edb7"></rect>
+                <circle cx="31" cy="25" r="2" fill="#24362d"></circle>
+                <circle cx="39" cy="25" r="2" fill="#24362d"></circle>
+                <rect x="105" y="22" width="11" height="11" rx="4" fill="#fb9b89"></rect>
+              </svg>
+              <span class="art-star">✦</span>
+            </div>
+            <div class="game-name">
+              <span>Ретро</span>
+              <h3 id="game-snake-title">Змейка</h3>
+            </div>
+            <span class="game-play">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <use href="#symbol-10"></use>
+              </svg>
+              <span>Играть</span>
+            </span>
+          </a>
+          <a class="game flappy reveal" href="games/flappy.html" aria-labelledby="game-flappy-title">
+            <div class="game-art" aria-hidden="true">
+              <svg viewBox="0 0 150 120" fill="none" focusable="false">
+                <path d="M112 0v34h24V0M112 84v36h24V84" fill="#799c86" stroke="#a5c7ad" stroke-width="3"></path>
+                <g class="little-bird">
+                  <rect x="46" y="40" width="39" height="29" rx="11" fill="#f3cd7d" stroke="#ffe6af" stroke-width="2"></rect>
+                  <path d="M49 55h14v10H49" fill="#e7a85e"></path>
+                  <rect x="77" y="46" width="6" height="7" rx="2" fill="#342e25"></rect>
+                  <path d="M84 55h11v7H84" fill="#f29578"></path>
+                </g>
+              </svg>
+              <span class="art-star">✦</span>
+            </div>
+            <div class="game-name">
+              <span>Аркада</span>
+              <h3 id="game-flappy-title">Флаппи</h3>
+            </div>
+            <span class="game-play">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <use href="#symbol-10"></use>
+              </svg>
+              <span>Играть</span>
+            </span>
+          </a>
+        </div>
+      </section>
+      <section class="help" id="help" aria-label="Помощь и отзывы" tabindex="-1">
+        <a class="help-link reveal" href="https://t.me/MarshalDeals" target="_blank" rel="noopener noreferrer">
+          <span class="help-icon">
+            <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <use href="#symbol-1"></use>
+            </svg>
+          </span>
+          <div>
+            <strong>Поможем разобраться</strong>
+            <p>Напиши нам в Telegram</p>
+          </div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <use href="#symbol-11"></use>
+          </svg>
+        </a>
+        <a class="help-link review-link reveal" href="https://t.me/legitAssetsreview" target="_blank" rel="noopener noreferrer">
+          <span class="help-icon">
+            <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>
+            </svg>
+          </span>
+          <div>
+            <strong>Что говорят покупатели</strong>
+            <p>Отзывы о LegitAssets</p>
+          </div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <use href="#symbol-11"></use>
+          </svg>
+        </a>
+      </section>
+      <footer class="footer">
+        <div class="footer-line">
+          <div>
+            <span class="footer-brand">LegitAssets</span>
+            <p class="footer-note">Твоя точка входа в цифровой мир.</p>
+          </div>
+          <div class="footer-controls">
+            <button class="motion" type="button" aria-pressed="true" aria-label="Анимационные эффекты" aria-describedby="motion-description">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="m13 3-8 11h6l-1 7 9-12h-6l1-6Z"></path>
+              </svg>
+              <span>Эффекты включены</span>
+            </button>
+            <a class="back-top" href="#top" aria-label="Вернуться наверх">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <use href="#symbol-2"></use>
+              </svg>
+            </a>
+          </div>
+          <span class="sr-only" id="motion-description">Настройка сохраняется на этом устройстве. Системное уменьшение движения имеет приоритет.</span>
+        </div>
+      </footer>
+    </main>
+    <nav class="bottom-nav" aria-label="Разделы мини-приложения">
+      <a href="#catalog" aria-current="location">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <use href="#symbol-8"></use>
+        </svg>
+        <span>Магазины</span>
+      </a>
+      <a href="#games">
+        <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <use href="#symbol-3"></use>
+        </svg>
+        <span>Игры</span>
+      </a>
+      <a href="#help">
+        <svg aria-hidden="true" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <use href="#symbol-1"></use>
+        </svg>
+        <span>Помощь</span>
+      </a>
+    </nav>
+    <script src="https://telegram.org/js/telegram-web-app.js" id="telegram-sdk" defer></script>
+    <script id="app-controller">
+/*
+ * LegitAssets: навигация, эффекты и необязательная интеграция Telegram.
+ * HTML-ссылки работают без JavaScript; SDK не блокирует интерфейс.
+ */
+(() => {
+  'use strict';
+
+  const root = document.documentElement;
+  const header = document.querySelector('.header');
+  const motionButton = document.querySelector('.motion');
+  const motionLabel = motionButton?.querySelector('span');
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const storageKey = 'legitassets-motion';
+  const sectionIds = ['catalog', 'games', 'help'];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  const navLinks = [...document.querySelectorAll('.bottom-nav a, .desktop-nav a')];
+  const revealItems = [...document.querySelectorAll('.reveal')];
+  let savedMotion = null;
+  let motionEnabled = false;
+  let revealObserver = null;
+  let navFrame = 0;
+  let currentSection = '';
+  let telegramInitialized = false;
+
+  // Хранилище может быть недоступно в приватном режиме или WebView.
+  try {
+    savedMotion = localStorage.getItem(storageKey);
+  } catch (_) {
+    // Текущая сессия продолжает работать без сохранения настройки.
+  }
+
+  function showAllCards() {
+    revealItems.forEach(item => item.classList.add('visible'));
+    revealObserver?.disconnect();
+    revealObserver = null;
+  }
+
+  function syncMotion() {
+    const systemReduced = motionQuery.matches;
+    motionEnabled = !systemReduced && savedMotion !== 'off';
+    root.classList.toggle('motion-off', !motionEnabled);
+
+    if (motionButton) {
+      motionButton.disabled = systemReduced;
+      motionButton.setAttribute('aria-pressed', String(motionEnabled));
+      motionButton.title = systemReduced
+        ? 'Уменьшение движения включено в настройках устройства'
+        : 'Включить или выключить декоративные эффекты';
+    }
+    if (motionLabel) {
+      motionLabel.textContent = systemReduced
+        ? 'Без эффектов · система'
+        : motionEnabled ? 'Эффекты включены' : 'Эффекты выключены';
+    }
+    if (!motionEnabled) {
+      showAllCards();
+      document.querySelectorAll('.ripple').forEach(node => node.remove());
+    }
+  }
+
+  motionButton?.addEventListener('click', () => {
+    if (motionQuery.matches) return;
+    savedMotion = motionEnabled ? 'off' : 'on';
+    try {
+      localStorage.setItem(storageKey, savedMotion);
+    } catch (_) {
+      // Не мешаем переключению, если сохранение запрещено.
+    }
+    syncMotion();
+  });
+
+  if (motionQuery.addEventListener) {
+    motionQuery.addEventListener('change', syncMotion);
+  } else if (motionQuery.addListener) {
+    motionQuery.addListener(syncMotion);
+  }
+  syncMotion();
+
+  // Появление карточек запускается однократно, а без API контент виден сразу.
+  if (motionEnabled && 'IntersectionObserver' in window) {
+    try {
+      revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('visible');
+          revealObserver?.unobserve(entry.target);
+        });
+      }, { threshold: 0.02, rootMargin: '0px 0px 20px 0px' });
+      revealItems.forEach((item, index) => {
+        item.style.setProperty('--delay', `${(index % 2) * 55}ms`);
+        revealObserver.observe(item);
+      });
+      root.classList.add('js-reveal');
+    } catch (_) {
+      showAllCards();
+      root.classList.remove('js-reveal');
+    }
+  }
+
+  // Один расчёт на кадр. Активен раздел, до которого пользователь долистал.
+  function activateSection(id) {
+    if (id === currentSection) return;
+    currentSection = id;
+    navLinks.forEach(link => {
+      if (link.hash === `#${id}`) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
+  function measureNavigation() {
+    navFrame = 0;
+    const headerBottom = header?.getBoundingClientRect().bottom || 0;
+    const marker = Math.min(window.innerHeight * 0.38, headerBottom + 110);
+    let active = 'catalog';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top <= marker) active = section.id;
+    });
+    const scrollingElement = document.scrollingElement || root;
+    const atEnd = scrollingElement.scrollHeight > window.innerHeight + 20 &&
+      window.scrollY + window.innerHeight >= scrollingElement.scrollHeight - 8;
+    if (atEnd) active = 'help';
+    activateSection(active);
+  }
+
+  function scheduleNavigation() {
+    if (!navFrame) navFrame = window.requestAnimationFrame(measureNavigation);
+  }
+
+  function measureHeader() {
+    if (header) root.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    scheduleNavigation();
+  }
+
+  window.addEventListener('scroll', scheduleNavigation, { passive: true });
+  window.addEventListener('resize', measureHeader, { passive: true });
+  window.addEventListener('hashchange', scheduleNavigation);
+  window.addEventListener('pageshow', () => {
+    // Возврат из игры или из кэша истории не запускает эффекты заново.
+    syncMotion();
+    measureHeader();
+  });
+  window.addEventListener('storage', event => {
+    if (event.key !== storageKey && event.key !== null) return;
+    savedMotion = event.key === null ? null : event.newValue;
+    syncMotion();
+  });
+  if ('ResizeObserver' in window && header) {
+    new ResizeObserver(measureHeader).observe(header);
+  }
+  measureHeader();
+
+  // Всплеск появляется только при основном нажатии, а не при прокрутке.
+  document.querySelectorAll('.store').forEach(card => {
+    let touchStart = null;
+    function rippleAt(clientX, clientY) {
+      if (!motionEnabled) return;
+      card.querySelectorAll('.ripple').forEach(node => node.remove());
+      const rect = card.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.setAttribute('aria-hidden', 'true');
+      ripple.style.setProperty('--x', `${clientX - rect.left}px`);
+      ripple.style.setProperty('--y', `${clientY - rect.top}px`);
+      card.appendChild(ripple);
+      window.setTimeout(() => ripple.remove(), 650);
+    }
+    card.addEventListener('pointerdown', event => {
+      if (!event.isPrimary || event.button !== 0) return;
+      if (event.pointerType === 'touch') {
+        touchStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+      } else {
+        rippleAt(event.clientX, event.clientY);
+      }
+    }, { passive: true });
+    card.addEventListener('pointerup', event => {
+      if (!touchStart || event.pointerId !== touchStart.id) return;
+      const movement = Math.hypot(event.clientX - touchStart.x, event.clientY - touchStart.y);
+      touchStart = null;
+      if (movement < 10) rippleAt(event.clientX, event.clientY);
+    }, { passive: true });
+    card.addEventListener('pointercancel', () => { touchStart = null; }, { passive: true });
+  });
+
+  function syncVisibility() {
+    root.classList.toggle('page-hidden', document.hidden);
+  }
+  document.addEventListener('visibilitychange', syncVisibility);
+  syncVisibility();
+
+  // SDK необязателен. Ошибка отдельного метода не ломает обычный сайт.
+  function callTelegram(method, ...args) {
+    try {
+      return typeof method === 'function' ? method(...args) : undefined;
+    } catch (_) {
+      return undefined;
+    }
+  }
+
+  function initializeTelegram() {
+    const app = window.Telegram?.WebApp;
+    if (telegramInitialized || !app?.initData) return;
+    telegramInitialized = true;
+    const supports = version => Boolean(callTelegram(app.isVersionAtLeast?.bind(app), version));
+    callTelegram(app.ready?.bind(app));
+    callTelegram(app.expand?.bind(app));
+
+    if (supports('6.1')) {
+      callTelegram(app.setHeaderColor?.bind(app), '#0d0e12');
+      callTelegram(app.setBackgroundColor?.bind(app), '#0d0e12');
+      callTelegram(app.BackButton?.hide?.bind(app.BackButton));
+    }
+    if (supports('7.10')) callTelegram(app.setBottomBarColor?.bind(app), '#0d0e12');
+
+    function syncInsets() {
+      ['safeAreaInset', 'contentSafeAreaInset'].forEach(key => {
+        const prefix = key === 'safeAreaInset' ? '--safe-' : '--content-';
+        ['top', 'bottom', 'left', 'right'].forEach(side => {
+          const value = Number(app[key]?.[side]);
+          const pixels = Number.isFinite(value) ? Math.max(0, value) : 0;
+          root.style.setProperty(prefix + side, `${pixels}px`);
+        });
+      });
+      measureHeader();
+    }
+    syncInsets();
+    if (supports('8.0')) {
+      callTelegram(app.onEvent?.bind(app), 'safeAreaChanged', syncInsets);
+      callTelegram(app.onEvent?.bind(app), 'contentSafeAreaChanged', syncInsets);
+    }
+    callTelegram(app.onEvent?.bind(app), 'viewportChanged', event => {
+      if (event?.isStateStable !== false) scheduleNavigation();
+    });
+
+    document.querySelectorAll('a[href^="https://t.me/"]').forEach(link => {
+      link.addEventListener('click', event => {
+        if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (!supports('6.1') || typeof app.openTelegramLink !== 'function') return;
+        try {
+          app.openTelegramLink(link.href);
+          event.preventDefault();
+        } catch (_) {
+          // Обычный href остаётся запасным способом открыть ссылку.
+        }
+      });
+    });
+  }
+
+  initializeTelegram();
+  document.getElementById('telegram-sdk')?.addEventListener('load', initializeTelegram, { once: true });
+})();
+
+</script>
+  </body>
+</html>

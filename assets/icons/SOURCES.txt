@@ -1,0 +1,9 @@
+Brand icons: Simple Icons, CC0-1.0
+https://github.com/simple-icons/simple-icons
+Telegram, Steam, Instagram, TikTok, Threads.
+
+Interface icons: Lucide, ISC license
+https://github.com/lucide-icons/lucide
+Gamepad, headset, shield-check, sparkles, star.
+
+Original SVG files and license texts are included. Icons are also embedded in index.html for a self-contained main page. Brand names and logos belong to their respective owners.
